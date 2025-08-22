@@ -5,6 +5,15 @@ Air Quality & Pollution Monitoring
 
 This project is a real-time Air Quality & Pollution Monitoring system designed to track and visualize Air Quality Index (AQI) levels. The website integrates live air quality data, visual indicators, and predictive models to raise awareness about pollution and its effects. It also provides alerts and innovative features such as push notifications and AR visualization
 
+ Problem
+ 
+Air pollution is a silent threat affecting millions, yet most people have no real-time, localized data about the air they breathe. 
+
+Solution
+
+Our project bridges this gap by monitoring and visualizing air quality to empower healthier choices.
+
+ 
 ✨ Features Implemented
 
 🔐 Google Authentication (Firebase)
