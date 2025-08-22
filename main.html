@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="images/istockphoto-1256527934-612x612-removebg-preview.png" type="image/x-icon">
+    <title>AQX - Breathe Smart. Live Safe.</title>
+     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <meta
+      name="description"
+      content="AQX Air Quality Monitor - Smart, affordable device that tracks air quality in real-time. Get mobile alerts, cloud data, and breathe safer."
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "eco-green": "#22c55e",
+              "fresh-blue": "#3b82f6",
+              "trust-teal": "#14b8a6",
+              "safe-mint": "#10b981",
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="main.css">
+  </head>
+  <body class="bg-white">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <div
+              class="w-10 h-10 bg-eco-green rounded-lg flex items-center justify-center"
+            >
+              <span class="text-white font-bold text-lg">AQX</span>
+            </div>
+            <span class="ml-3 text-xl font-semibold text-gray-900"
+              >AQX Monitor</span
+            >
+          </div>
+          <div class="hidden md:flex space-x-8">
+            <a
+              href="#about"
+              class="text-gray-700 hover:text-eco-green transition-colors"
+              >About</a
+            >
+            <a
+              href="map.html"
+              class="text-gray-700 hover:text-eco-green transition-colors"
+              >Dashboard</a
+            >
+            <a
+              href="#features"
+              class="text-gray-700 hover:text-eco-green transition-colors"
+              >Features</a
+            >
+            <a
+              href="#contact"
+              class="text-gray-700 hover:text-eco-green transition-colors"
+              >Contact</a
+            >
+          </div>
+          <div id="user-info" style="display:none;">
+    <img id="user-photo" width="20" height="20" style="border-radius:20%;">
+    <p id="user-name"></p>
+    <p id="user-email"></p>
+   
+</div>
+<div id="auth-container">
+    <button id="google-sign-in" class="nav-button">Sign In with Google</button>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h1 class="text-5xl font-bold text-gray-900 mb-6">
+              Breathe Smart.<br />
+              <span class="text-eco-green">Live Safe.</span>
+            </h1>
+            <p class="text-xl text-gray-600 mb-8">
+              Monitor your air quality in real-time with AQX's cutting-edge
+              sensors. Get instant alerts and take control of your health.
+            </p>
+            <button
+              onclick="checkAirQuality()"
+              class="bg-fresh-blue text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-600 transition-colors pulse-animation"
+            ><a href="map.html">
+              Check Your Air Now</a>
+            </button>
+          </div>
+          <div class="flex justify-center">
+            <div class="relative">
+              <div
+                class="w-80 h-80 bg-white rounded-3xl shadow-2xl flex items-center justify-center"
+              >
+                <svg
+                  width="200"
+                  height="200"
+                  viewBox="0 0 200 200"
+                  class="text-eco-green"
+                >
+                  <rect
+                    x="40"
+                    y="30"
+                    width="120"
+                    height="140"
+                    rx="20"
+                    fill="currentColor"
+                    opacity="0.1"
+                  />
+                  <rect
+                    x="50"
+                    y="40"
+                    width="100"
+                    height="120"
+                    rx="15"
+                    fill="currentColor"
+                    opacity="0.2"
+                  />
+                  <circle cx="100" cy="80" r="25" fill="currentColor" />
+                  <text
+                    x="100"
+                    y="87"
+                    text-anchor="middle"
+                    class="text-white font-bold text-lg"
+                  >
+                    AQX
+                  </text>
+                  <rect
+                    x="70"
+                    y="120"
+                    width="60"
+                    height="8"
+                    rx="4"
+                    fill="currentColor"
+                    opacity="0.3"
+                  />
+                  <rect
+                    x="80"
+                    y="135"
+                    width="40"
+                    height="6"
+                    rx="3"
+                    fill="currentColor"
+                    opacity="0.3"
+                  />
+                </svg>
+              </div>
+              <div
+                class="absolute -top-4 -right-4 w-8 h-8 bg-eco-green rounded-full pulse-animation"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About AQX -->
+    <section id="about" class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold text-gray-900 mb-4">About AQX</h2>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            AQX uses advanced sensor technology to continuously monitor air
+            quality parameters, ensuring you always know when your environment
+            is safe.
+          </p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="text-center p-6">
+            <div
+              class="w-16 h-16 bg-trust-teal rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <svg width="32" height="32" fill="white" viewBox="0 0 24 24">
+                <path
+                  d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Cutting-Edge Sensors</h3>
+            <p class="text-gray-600">
+              Advanced PM2.5, PM10, CO₂, humidity, and temperature sensors for
+              comprehensive monitoring.
+            </p>
+          </div>
+          <div class="text-center p-6">
+            <div
+              class="w-16 h-16 bg-fresh-blue rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <svg width="32" height="32" fill="white" viewBox="0 0 24 24">
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Real-Time Monitoring</h3>
+            <p class="text-gray-600">
+              Continuous 24/7 monitoring with instant updates and historical
+              data tracking.
+            </p>
+          </div>
+          <div class="text-center p-6">
+            <div
+              class="w-16 h-16 bg-eco-green rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <svg width="32" height="32" fill="white" viewBox="0 0 24 24">
+                <path
+                  d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Smart Alerts</h3>
+            <p class="text-gray-600">
+              Receive instant mobile notifications when air quality reaches
+              dangerous levels.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live Air Quality Dashboard -->
+
+    <!-- Live Air Quality Dashboard -->
+    <section id="dashboard" class="py-20 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold text-gray-900 mb-4">
+            Live Air Quality Dashboard
+          </h2>
+          <p class="text-xl text-gray-600">
+            Real-time readings from your AQX device
+          </p>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 mb-12">
+          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="text-center p-6 bg-green-50 rounded-xl">
+              <div
+                class="text-3xl font-bold text-green-600 mb-2"
+                id="aqi-value"
+              >
+                42
+              </div>
+              <div class="text-sm text-gray-600 mb-1">Air Quality Index</div>
+              <div class="text-xs text-green-600 font-semibold" id="aqi-status">
+                Good
+              </div>
+            </div>
+            <div class="text-center p-6 bg-blue-50 rounded-xl">
+              <div
+                class="text-3xl font-bold text-blue-600 mb-2"
+                id="pm25-value"
+              >
+                12
+              </div>
+              <div class="text-sm text-gray-600 mb-1">PM2.5 (μg/m³)</div>
+              <div class="text-xs text-blue-600 font-semibold" id="pm25-status">
+                Safe
+              </div>
+            </div>
+            <div class="text-center p-6 bg-yellow-50 rounded-xl">
+              <div
+                class="text-3xl font-bold text-yellow-600 mb-2"
+                id="co2-value"
+              >
+                420
+              </div>
+              <div class="text-sm text-gray-600 mb-1">CO₂ (ppm)</div>
+              <div
+                class="text-xs text-yellow-600 font-semibold"
+                id="co2-status"
+              >
+                Normal
+              </div>
+            </div>
+            <div class="text-center p-6 bg-teal-50 rounded-xl">
+              <div
+                class="text-3xl font-bold text-teal-600 mb-2"
+                id="humidity-value"
+              >
+                45%
+              </div>
+              <div class="text-sm text-gray-600 mb-1">Humidity</div>
+              <div
+                class="text-xs text-teal-600 font-semibold"
+                id="humidity-status"
+              >
+                Optimal
+              </div>
+            </div>
+          </div>
+          <div class="bg-green-600 text-white p-4 rounded-lg text-center">
+            <div class="font-semibold" id="air-status-text">
+              ✓ Air Quality Status: EXCELLENT
+            </div>
+            <div class="text-sm opacity-90 mt-1" id="air-status-sub">
+              Your air is clean and safe to breathe
+            </div>
+          </div>
+        </div>
+
+        <!-- Graphs -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">AQI Trend</h3>
+            <canvas id="aqiChart" height="100"></canvas>
+          </div>
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+              PM2.5 Levels
+            </h3>
+            <canvas id="pm25Chart" height="100"></canvas>
+          </div>
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">CO₂ Levels</h3>
+            <canvas id="co2Chart" height="100"></canvas>
+          </div>
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+              Humidity Trend
+            </h3>
+            <canvas id="humidityChart" height="100"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      function makeChart(ctx, label, borderColor, bgColor, values) {
+        return new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: Array.from(
+              { length: values.length },
+              (_, i) => `T-${values.length - i}m`
+            ),
+            datasets: [
+              {
+                label,
+                data: values,
+                borderColor,
+                backgroundColor: bgColor,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 3,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } },
+          },
+        });
+      }
+
+      // Initial data
+      let aqiData = [42, 55, 60, 75, 90, 120, 100, 80, 65, 50];
+      let pm25Data = [12, 15, 18, 22, 19, 14, 16, 20, 18, 15];
+      let co2Data = [420, 430, 440, 460, 455, 445, 435, 425, 415, 410];
+      let humidityData = [45, 47, 50, 48, 46, 49, 51, 50, 48, 47];
+
+      // Build charts
+      const aqiChart = makeChart(
+        document.getElementById("aqiChart"),
+        "AQI",
+        "rgba(239,68,68,1)",
+        "rgba(239,68,68,0.2)",
+        aqiData
+      );
+      const pm25Chart = makeChart(
+        document.getElementById("pm25Chart"),
+        "PM2.5",
+        "rgba(59,130,246,1)",
+        "rgba(59,130,246,0.2)",
+        pm25Data
+      );
+      const co2Chart = makeChart(
+        document.getElementById("co2Chart"),
+        "CO₂",
+        "rgba(234,179,8,1)",
+        "rgba(234,179,8,0.2)",
+        co2Data
+      );
+      const humidityChart = makeChart(
+        document.getElementById("humidityChart"),
+        "Humidity",
+        "rgba(34,197,94,1)",
+        "rgba(34,197,94,0.2)",
+        humidityData
+      );
+
+      // Update function
+      function updateData() {
+        // Generate random new values
+        const newAQI = Math.floor(Math.random() * 200);
+        const newPM25 = Math.floor(Math.random() * 50);
+        const newCO2 = 400 + Math.floor(Math.random() * 100);
+        const newHumidity = 40 + Math.floor(Math.random() * 20);
+
+        // Push into arrays
+        aqiData.push(newAQI);
+        aqiData.shift();
+        pm25Data.push(newPM25);
+        pm25Data.shift();
+        co2Data.push(newCO2);
+        co2Data.shift();
+        humidityData.push(newHumidity);
+        humidityData.shift();
+
+        // Update charts
+        aqiChart.update();
+        pm25Chart.update();
+        co2Chart.update();
+        humidityChart.update();
+
+        // Update card values
+        document.getElementById("aqi-value").textContent = newAQI;
+        document.getElementById("pm25-value").textContent = newPM25;
+        document.getElementById("co2-value").textContent = newCO2;
+        document.getElementById("humidity-value").textContent =
+          newHumidity + "%";
+
+        // Status texts (basic demo logic)
+        document.getElementById("aqi-status").textContent =
+          newAQI < 50 ? "Good" : newAQI < 100 ? "Moderate" : "Unhealthy";
+        document.getElementById("pm25-status").textContent =
+          newPM25 < 15 ? "Safe" : "Caution";
+        document.getElementById("co2-status").textContent =
+          newCO2 < 450 ? "Normal" : "High";
+        document.getElementById("humidity-status").textContent =
+          newHumidity >= 40 && newHumidity <= 60 ? "Optimal" : "Dry/Wet";
+
+        // Overall status
+        document.getElementById("air-status-text").textContent =
+          newAQI < 50
+            ? "✓ Air Quality Status: EXCELLENT"
+            : "⚠ Air Quality Status: WARNING";
+        document.getElementById("air-status-sub").textContent =
+          newAQI < 50
+            ? "Your air is clean and safe to breathe"
+            : "Consider precautions when outdoors";
+      }
+
+      // Auto update every 5 seconds
+      setInterval(updateData, 5000);
+    </script>
+    <!-- Hazard Alerts & Tips -->
+    <section class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold text-gray-900 mb-4">
+            Air Quality Danger Levels
+          </h2>
+          <p class="text-xl text-gray-600">
+            Know when to take action for your health
+          </p>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="bg-green-50 border-l-4 border-eco-green p-6 rounded-lg">
+            <div class="flex items-center mb-3">
+              <div class="w-4 h-4 bg-eco-green rounded-full mr-3"></div>
+              <h3 class="font-semibold text-eco-green">Good (0-50)</h3>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">
+              Air quality is satisfactory for everyone.
+            </p>
+            <p class="text-xs text-gray-500">
+              💡 Perfect for outdoor activities
+            </p>
+          </div>
+          <div class="bg-yellow-50 border-l-4 border-yellow-500 p-6 rounded-lg">
+            <div class="flex items-center mb-3">
+              <div class="w-4 h-4 bg-yellow-500 rounded-full mr-3"></div>
+              <h3 class="font-semibold text-yellow-700">Moderate (51-100)</h3>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">
+              Sensitive people may experience minor issues.
+            </p>
+            <p class="text-xs text-gray-500">
+              💡 Limit prolonged outdoor exertion
+            </p>
+          </div>
+          <div class="bg-orange-50 border-l-4 border-orange-500 p-6 rounded-lg">
+            <div class="flex items-center mb-3">
+              <div class="w-4 h-4 bg-orange-500 rounded-full mr-3"></div>
+              <h3 class="font-semibold text-orange-700">Unhealthy (101-200)</h3>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">
+              Everyone may experience health effects.
+            </p>
+            <p class="text-xs text-gray-500">
+              💡 Use air purifiers, limit outdoor time
+            </p>
+          </div>
+          <div class="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg">
+            <div class="flex items-center mb-3">
+              <div class="w-4 h-4 bg-red-500 rounded-full mr-3"></div>
+              <h3 class="font-semibold text-red-700">Hazardous (200+)</h3>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">
+              Emergency conditions affecting everyone.
+            </p>
+            <p class="text-xs text-gray-500">
+              💡 Stay indoors, wear masks if outside
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Perfect Air Parameters -->
+    <section class="py-20 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold text-gray-900 mb-4">
+            Perfect Air Parameters
+          </h2>
+          <p class="text-xl text-gray-600">
+            Ideal ranges for optimal health and comfort
+          </p>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div class="bg-white p-8 rounded-2xl shadow-lg">
+            <div class="text-center mb-6">
+              <div
+                class="w-16 h-16 bg-eco-green rounded-full flex items-center justify-center mx-auto mb-4"
+              >
+                <span class="text-white font-bold text-lg">PM</span>
+              </div>
+              <h3 class="text-xl font-semibold">PM2.5 & PM10</h3>
+            </div>
+            <div class="space-y-3">
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600">PM2.5 Ideal:</span>
+                <span class="font-semibold text-eco-green">0-12 μg/m³</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600">PM10 Ideal:</span>
+                <span class="font-semibold text-eco-green">0-20 μg/m³</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  class="bg-eco-green h-2 rounded-full"
+                  style="width: 85%"
+                ></div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white p-8 rounded-2xl shadow-lg">
+            <div class="text-center mb-6">
+              <div
+                class="w-16 h-16 bg-fresh-blue rounded-full flex items-center justify-center mx-auto mb-4"
+              >
+                <span class="text-white font-bold text-sm">CO₂</span>
+              </div>
+              <h3 class="text-xl font-semibold">Carbon Dioxide</h3>
+            </div>
+            <div class="space-y-3">
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600">Outdoor:</span>
+                <span class="font-semibold text-eco-green">400-450 ppm</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600">Indoor:</span>
+                <span class="font-semibold text-eco-green">400-1000 ppm</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  class="bg-fresh-blue h-2 rounded-full"
+                  style="width: 70%"
+                ></div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white p-8 rounded-2xl shadow-lg">
+            <div class="text-center mb-6">
+              <div
+                class="w-16 h-16 bg-trust-teal rounded-full flex items-center justify-center mx-auto mb-4"
+              >
+                <span class="text-white font-bold text-lg">H</span>
+              </div>
+              <h3 class="text-xl font-semibold">Humidity & Temp</h3>
+            </div>
+            <div class="space-y-3">
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600">Humidity:</span>
+                <span class="font-semibold text-eco-green">40-60%</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600">Temperature:</span>
+                <span class="font-semibold text-eco-green">20-24°C</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  class="bg-trust-teal h-2 rounded-full"
+                  style="width: 90%"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why AQX -->
+    <section id="features" class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold text-gray-900 mb-4">Why Choose AQX?</h2>
+          <p class="text-xl text-gray-600">
+            Superior features at an unbeatable price
+          </p>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div class="text-center p-6">
+            <div
+              class="w-20 h-20 bg-eco-green rounded-2xl flex items-center justify-center mx-auto mb-4"
+            >
+              <svg width="40" height="40" fill="white" viewBox="0 0 24 24">
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Affordable Price</h3>
+            <p class="text-gray-600">
+              Premium air quality monitoring at 50% less than competitors
+            </p>
+          </div>
+          <div class="text-center p-6">
+            <div
+              class="w-20 h-20 bg-fresh-blue rounded-2xl flex items-center justify-center mx-auto mb-4"
+            >
+              <svg width="40" height="40" fill="white" viewBox="0 0 24 24">
+                <path
+                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Lab-Grade Accuracy</h3>
+            <p class="text-gray-600">
+              Professional-grade sensors with ±2% accuracy guarantee
+            </p>
+          </div>
+          <div class="text-center p-6">
+            <div
+              class="w-20 h-20 bg-trust-teal rounded-2xl flex items-center justify-center mx-auto mb-4"
+            >
+              <svg width="40" height="40" fill="white" viewBox="0 0 24 24">
+                <path
+                  d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Smart Mobile Alerts</h3>
+            <p class="text-gray-600">
+              Instant notifications when air quality changes
+            </p>
+          </div>
+          <div class="text-center p-6">
+            <div
+              class="w-20 h-20 bg-safe-mint rounded-2xl flex items-center justify-center mx-auto mb-4"
+            >
+              <svg width="40" height="40" fill="white" viewBox="0 0 24 24">
+                <path
+                  d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Cloud Data Storage</h3>
+            <p class="text-gray-600">
+              Historical data tracking with trend analysis
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-20 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold text-gray-900 mb-4">
+            What Our Users Say
+          </h2>
+          <p class="text-xl text-gray-600">
+            Real stories from people breathing better
+          </p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="bg-white p-8 rounded-2xl shadow-lg">
+            <div class="flex items-center mb-4">
+              <div
+                class="w-12 h-12 bg-eco-green rounded-full flex items-center justify-center mr-4"
+              >
+                <span class="text-white font-semibold">SM</span>
+              </div>
+              <div>
+                <h4 class="font-semibold">Sarah Martinez</h4>
+                <p class="text-sm text-gray-600">Asthma Patient</p>
+              </div>
+            </div>
+            <p class="text-gray-700 italic">
+              "AQX helped me identify air quality triggers in my home. My asthma
+              attacks have reduced by 70% since using it!"
+            </p>
+          </div>
+          <div class="bg-white p-8 rounded-2xl shadow-lg">
+            <div class="flex items-center mb-4">
+              <div
+                class="w-12 h-12 bg-fresh-blue rounded-full flex items-center justify-center mr-4"
+              >
+                <span class="text-white font-semibold">DJ</span>
+              </div>
+              <div>
+                <h4 class="font-semibold">David Johnson</h4>
+                <p class="text-sm text-gray-600">Parent of Two</p>
+              </div>
+            </div>
+            <p class="text-gray-700 italic">
+              "As a parent, knowing my kids are breathing clean air gives me
+              peace of mind. The mobile alerts are incredibly helpful."
+            </p>
+          </div>
+          <div class="bg-white p-8 rounded-2xl shadow-lg">
+            <div class="flex items-center mb-4">
+              <div
+                class="w-12 h-12 bg-trust-teal rounded-full flex items-center justify-center mr-4"
+              >
+                <span class="text-white font-semibold">LC</span>
+              </div>
+              <div>
+                <h4 class="font-semibold">Lisa Chen</h4>
+                <p class="text-sm text-gray-600">Office Manager</p>
+              </div>
+            </div>
+            <p class="text-gray-700 italic">
+              "We installed AQX in our office and productivity increased 25%.
+              Clean air really makes a difference!"
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact & Purchase -->
+    <section id="contact" class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold text-gray-900 mb-4">
+            Get Your AQX Today
+          </h2>
+          <p class="text-xl text-gray-600">
+            Start breathing smarter and living safer
+          </p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-12">
+          <div
+            class="bg-gradient-to-br from-eco-green to-safe-mint text-white p-8 rounded-2xl"
+          >
+            <h3 class="text-2xl font-bold mb-6">AQX Air Quality Monitor</h3>
+            <div class="space-y-4 mb-8">
+              <div class="flex items-center">
+                <svg
+                  width="20"
+                  height="20"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  class="mr-3"
+                >
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                  />
+                </svg>
+                <span>Real-time air quality monitoring</span>
+              </div>
+              <div class="flex items-center">
+                <svg
+                  width="20"
+                  height="20"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  class="mr-3"
+                >
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                  />
+                </svg>
+                <span>Mobile app with smart alerts</span>
+              </div>
+              <div class="flex items-center">
+                <svg
+                  width="20"
+                  height="20"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  class="mr-3"
+                >
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                  />
+                </svg>
+                <span>Cloud data storage & analytics</span>
+              </div>
+              <div class="flex items-center">
+                <svg
+                  width="20"
+                  height="20"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  class="mr-3"
+                >
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                  />
+                </svg>
+                <span>2-year warranty included</span>
+              </div>
+            </div>
+            <div class="text-center">
+              <div class="text-4xl font-bold mb-2">₹13,000.690</div>
+              <div class="text-lg opacity-90 mb-6">Free shipping worldwide</div>
+              <button
+                class="bg-white text-eco-green px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors w-full" 
+              >
+              <a href="order.html">
+                Order Now
+                </a>
+              </button>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-6">Contact Us</h3>
+            <div class="space-y-6">
+              <div class="flex items-start">
+                <div
+                  class="w-12 h-12 bg-eco-green rounded-lg flex items-center justify-center mr-4 mt-1"
+                >
+                  <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+                    <path
+                      d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-900">Email Support</h4>
+                  <p class="text-gray-600">aqxmonitor@gmail.com</p>
+                  <p class="text-sm text-gray-500">Response within 24 hours</p>
+                </div>
+              </div>
+              <div class="flex items-start">
+                <div
+                  class="w-12 h-12 bg-fresh-blue rounded-lg flex items-center justify-center mr-4 mt-1"
+                >
+                  <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+                    <path
+                      d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-900">Phone Support</h4>
+                  <p class="text-gray-600">+91 92351 97023</p>
+                  <p class="text-sm text-gray-500">Mon-Fri 9AM-6PM EST</p>
+                </div>
+              </div>
+              <div class="flex items-start">
+                <div
+                  class="w-12 h-12 bg-trust-teal rounded-lg flex items-center justify-center mr-4 mt-1"
+                >
+                  <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+                    <path
+                      d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-900">Office Address</h4>
+                  <p class="text-gray-600">
+                    L-2/559, Vineet Khand<br />Gomti Nagar Lko-226010
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-4 gap-8">
+          <div>
+            <div class="flex items-center mb-4">
+              <div
+                class="w-10 h-10 bg-eco-green rounded-lg flex items-center justify-center mr-3"
+              >
+                <span class="text-white font-bold text-lg">AQX</span>
+              </div>
+              <span class="text-xl font-semibold">AQX Monitor</span>
+            </div>
+            <p class="text-gray-400">
+              Making clean air accessible to everyone, everywhere.
+            </p>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-4">Product</h4>
+            <ul class="space-y-2 text-gray-400">
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >Features</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >Specifications</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >Mobile App</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >API Access</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-4">Support</h4>
+            <ul class="space-y-2 text-gray-400">
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >Help Center</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >Installation Guide</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >Warranty</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >Returns</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-4">Company</h4>
+            <ul class="space-y-2 text-gray-400">
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >About Us</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >Privacy Policy</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >Terms of Service</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors"
+                  >Contact</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400"
+        >
+          <p>
+            &copy; 2025 AQX Monitor. All rights reserved. Breathe Smart. Live
+            Safe.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Chatbot -->
+    <div id="chatbot" class="fixed bottom-6 right-6 z-50">
+        <iframe src="https://cdn.botpress.cloud/webchat/v3.2/shareable.html?configUrl=https://files.bpcontent.cloud/2025/08/21/15/20250821151411-5E1DLRRK.json" 
+                style="width: 400px; height: 600px; border: none; display: none;" 
+                id="chatbotFrame"></iframe>
+        <button onclick="toggleChatbot()" class="bg-indigo-600 text-white w-14 h-14 rounded-full flex items-center justify-center cursor-pointer hover:bg-indigo-700 transition-colors shadow-lg chatbot-float">
+            <span class="text-2xl">🤖</span>
+        </button>
+    </div>
+      <button
+        id="chat-button"
+        onclick="toggleChat()"
+        class="bg-eco-green text-white w-14 h-14 rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 flex items-center justify-center pulse-animation"
+      >
+        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+          <path
+            d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyBttpQem_zRJdZzcMtuTqfJKd5y8QhXqLc",
+        authDomain: "auction-88aea.firebaseapp.com",
+        projectId: "auction-88aea",
+        storageBucket: "auction-88aea.appspot.com",
+        messagingSenderId: "789751660747",
+        appId: "1:789751660747:web:68384d1187f299cc05db4e",
+        measurementId: "G-CMW36SJRYF"
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const authContainer = document.getElementById('auth-container');
+
+    // Function to send the ID token to the backend
+    function sendTokenToBackend(idToken) {
+        // Replace with your actual backend endpoint URL
+        const backendUrl = 'http://localhost:5000/api/verify-token';
+
+        fetch(backendUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ idToken: idToken })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Backend response:', data);
+            // Example: The backend might return a custom token or success message
+        })
+        .catch(error => {
+            console.error('Error sending token to backend:', error);
+        });
+    }
+
+    // Function to handle Google Sign-in
+    function signInWithGoogle() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider)
+            .then((result) => {
+                const user = result.user;
+                console.log('User signed in: ', user);
+
+                // Show user info
+                document.getElementById('user-photo').src = user.photoURL;
+                document.getElementById('user-name').textContent = user.displayName;
+                
+
+                // Send token to backend
+                user.getIdToken().then(idToken => {
+                    sendTokenToBackend(idToken);
+                });
+            })
+            .catch((error) => {
+                console.error('Error during sign in: ', error);
+            });
+    }
+
+    // Sign-Out function
+    function signOutUser() {
+        auth.signOut().then(() => {
+            console.log('User signed out');
+            document.getElementById('user-info').style.display = 'none';
+        });
+    }
+
+    // Auto-detect if user is already logged in
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            authContainer.innerHTML = ''; // Clear the sign-in button
+            document.getElementById('user-photo').src = user.photoURL;
+            document.getElementById('user-name').textContent = user.displayName;
+            document.getElementById('user-email').textContent = user.email;
+            document.getElementById('user-info').style.display = 'block';
+        } else {
+            authContainer.innerHTML = `
+                <button id="google-sign-in" class="nav-button">Sign In with Google</button>
+            `;
+            document.getElementById('user-info').style.display = 'none';
+            document.getElementById('google-sign-in').addEventListener('click', signInWithGoogle);
+        }
+    });
+
+    </script>
+    <script>
+        // Function to toggle the chatbot visibility
+        function toggleChatbot() {
+            const frame = document.getElementById('chatbotFrame');
+            if (frame.style.display === "none") {
+                frame.style.display = "block";
+            } else {
+                frame.style.display = "none";
+            }
+        }
+
+        // Existing JavaScript code for auction functionality...
+        // (Include the rest of your existing JavaScript code here)
+    </script>
+     <script src="main.js" defer></script>
+    </body>
+</html>

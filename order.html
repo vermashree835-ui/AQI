@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="images/istockphoto-1256527934-612x612-removebg-preview.png" type="image/x-icon">
+  <title>Order Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #e6f2ff; /* Light blue background */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .order-form {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      width: 350px;
+    }
+
+    .order-form h2 {
+      text-align: center;
+      color: #0077b6; /* Blue heading */
+      margin-bottom: 20px;
+    }
+
+    .order-form label {
+      display: block;
+      margin-bottom: 5px;
+      color: #023e8a; /* Darker blue */
+      font-weight: bold;
+    }
+
+    .order-form input, 
+    .order-form select, 
+    .order-form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 2px solid #90ee90; /* Green border */
+      border-radius: 6px;
+      outline: none;
+      transition: border 0.3s;
+    }
+
+    .order-form input:focus,
+    .order-form select:focus,
+    .order-form textarea:focus {
+      border-color: #007f5f; /* Darker green on focus */
+    }
+
+    .order-form button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(45deg, #0077b6, #00b4d8); /* Blue gradient */
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .order-form button:hover {
+      background: linear-gradient(45deg, #00b4d8, #0077b6); /* hover gradient */
+    }
+  </style>
+</head>
+<body>
+
+  <form class="order-form" action="thankyou.html" method="get">
+    <h2>Place Your Order</h2>
+
+    <label for="name">Full Name</label>
+    <input type="text" id="name" name="name" placeholder="John Doe" required>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" placeholder="example@email.com" required>
+
+    <label for="product">Product</label>
+    <select id="product" name="product" required>
+      <option value="">Select Product</option>
+      <option value="dress">AQX</option>
+   
+    </select>
+
+    <label for="quantity">Quantity</label>
+    <input type="number" id="quantity" name="quantity" min="1" placeholder="1" required>
+
+    <label for="address">Shipping Address</label>
+    <textarea id="address" name="address" rows="3" placeholder="Enter your address" required></textarea>
+
+    <button type="submit" >Order Now</button>
+  </form>
+
+</body>
+</html>

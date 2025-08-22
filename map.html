@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>City AQI Dashboard</title>
+  <link rel="icon" href="images/istockphoto-1256527934-612x612-removebg-preview.png" type="image/x-icon">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .navbar {
+      background-color: #2c3e50;
+      padding: 10px 20px;
+      color: #ecf0f1;
+      display: flex;
+      gap: 15px;
+    }
+
+    .navbar button {
+      background: #3498db;
+      border: none;
+      color: #fff;
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .navbar button:hover {
+      background: #2980b9;
+    }
+
+    .main {
+      flex: 1;
+      display: flex;
+    }
+
+    #map {
+      flex: 1;
+    }
+
+    .aqi-panel {
+      width: 300px;
+      padding: 20px;
+      background: #f9f9f9;
+      overflow-y: auto;
+    }
+
+    .aqi-panel h2 {
+      margin-top: 0;
+      color: #333;
+    }
+
+    .aqi-value {
+      font-size: 2em;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Navbar with city selectors -->
+  <div class="navbar">
+    <button data-city="lucknow">Lucknow</button>
+    <button data-city="delhi">Delhi</button>
+    <button data-city="mumbai">Mumbai</button>
+    <button data-city="kolkata">Kolkata</button>
+    <button data-city="bangalore">Bangalore</button>
+  </div>
+
+  <!-- Main split content -->
+  <div class="main">
+    <div id="map"></div>
+    <div class="aqi-panel">
+      <h2 id="city-name">Select a City</h2>
+      <div>AQI: <span id="aqi-value">--</span></div>
+      <div id="aqi-status"></div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <script>
+    const map = L.map('map').setView([26.8467, 80.9462], 10);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 19
+    }).addTo(map);
+
+    const cities = {
+      lucknow: { name: 'Lucknow', coords: [26.8467, 80.9462] },
+      delhi: { name: 'Delhi', coords: [28.7041, 77.1025] },
+      mumbai: { name: 'Mumbai', coords: [19.0760, 72.8777] },
+      kolkata: { name: 'Kolkata', coords: [22.5726, 88.3639] },
+      bangalore: { name: 'Bangalore', coords: [12.9716, 77.5946] },
+    };
+
+    function getAQIStatus(val) {
+      if (val <= 50) return 'Good';
+      if (val <= 100) return 'Moderate';
+      if (val <= 200) return 'Unhealthy for Sensitive Groups';
+      if (val <= 300) return 'Unhealthy';
+      return 'Very Unhealthy';
+    }
+
+    let marker;
+
+    async function updateCity(cityKey) {
+      const city = cities[cityKey];
+      map.setView(city.coords, 10);
+
+      if (marker) map.removeLayer(marker);
+      marker = L.marker(city.coords).addTo(map);
+
+      document.getElementById('city-name').innerText = city.name;
+
+      const token = "YOUR_API_KEY"; // Replace with your WAQI API key
+      const url = `https://api.waqi.info/feed/${cityKey}/?token=${token}`;
+
+      try {
+        const resp = await axios.get(url);
+        const aqi = resp.data.data.aqi;
+        document.getElementById('aqi-value').innerText = aqi;
+        document.getElementById('aqi-status').innerText = getAQIStatus(aqi);
+      } catch (err) {
+        document.getElementById('aqi-value').innerText = 'Unhealthy';
+        document.getElementById('aqi-status').innerText = '250';
+        console.error('AQI fetch error:', err);
+      }
+    }
+
+    document.querySelectorAll('.navbar button').forEach(btn => {
+      btn.addEventListener('click', () => updateCity(btn.dataset.city));
+    });
+  </script>
+</body>
+</html>
